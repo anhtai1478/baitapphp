@@ -55,7 +55,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     if (!array_filter($error)) {
         // Yêu cầu: avatar lấy tên file insert vào
-        $uploadDir = 'uploads/';
+        $uploadDir = '../uploads/';
         $targetfilepath = $uploadDir . $fileName;
         // Kiểm tra nếu thư mục uploads chưa tồn tại thì tạo mới
         if (!file_exists($uploadDir)) {
