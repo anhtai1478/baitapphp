@@ -10,7 +10,7 @@ $error = [
 ];
 
 $email = $password = $name = "";
-$success_msg = "";
+//$success_msg = "";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email = trim($_POST["email"] ?? '');
@@ -34,6 +34,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (!isset($_FILES['avatar']) || $_FILES['avatar']['error'] == UPLOAD_ERR_NO_FILE) {
         $error['avatar'] = "Vui lòng chọn ảnh đại diện";
     } else {
+
+        // Xử lý file ảnh đại diện
         $file = $_FILES['avatar'];
         $fileName = $file['name'];
         $fileTmpName = $file['tmp_name'];
@@ -57,6 +59,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // Yêu cầu: avatar lấy tên file insert vào
         $uploadDir = '../uploads/';
         $targetfilepath = $uploadDir . $fileName;
+        
         // Kiểm tra nếu thư mục uploads chưa tồn tại thì tạo mới
         if (!file_exists($uploadDir)) {
             mkdir($uploadDir, 0777, true);
@@ -69,8 +72,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $stmt->bind_param("ssss", $email, $passwordHard, $name, $fileName);
 
             if ($stmt->execute()) {
-                $success_msg = "Đăng ký thành công!";
+                //$success_msg = "Đăng ký thành công!";
                 $email = $password = $name = "";
+                header("Location: login.php");
+                
             } else {
                 $error['email'] = "Email này đã tồn tại hoặc có lỗi CSDL!";
             }
@@ -90,7 +95,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <link rel="stylesheet" href="register.css">
+    <link rel="stylesheet" href="../css/register.css">
 </head>
 
 <body>

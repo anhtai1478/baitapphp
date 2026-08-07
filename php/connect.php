@@ -2,7 +2,7 @@
 $host = "localhost";
 $username = "root";
 $password = "";
-$database = "ban_hang";
+$database = "banhang";
 
 $conn = mysqli_connect($host, $username, $password, $database);
 if (!$conn) {
