@@ -72,7 +72,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $stmt->bind_param("ssss", $email, $passwordHard, $name, $fileName);
 
             if ($stmt->execute()) {
-                //$success_msg = "Đăng ký thành công!";
+              // $success_msg = "Đăng ký thành công!";
                 $email = $password = $name = "";
                 header("Location: login.php");
 

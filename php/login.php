@@ -31,17 +31,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $password_hash = md5($password);
 
         $sql = "SELECT * FROM user WHERE email = ? AND password = ?";
-
+    
+        // Chuẩn bị câu lệnh SQL
         $stmt = $conn->prepare($sql);
 
         if (!$stmt) {
             die("Lỗi SQL: " . $conn->error);
         }
-
+        // Liên kết các tham số
         $stmt->bind_param("ss", $email, $password_hash);
-
+        // Thực thi câu lệnh SQL
         $stmt->execute();
-
+        // Lấy kết quả
         $result = $stmt->get_result();
 
         if ($result->num_rows > 0) {
