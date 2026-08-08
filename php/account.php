@@ -277,6 +277,8 @@ if (!$user) {
 
                             <p>
                                 <strong>ID:</strong>
+
+                                <!-- htmlspecialchars: chuyển đổi các ký tự đặc biệt thành các entity HTML -->
                                 <?php echo htmlspecialchars($user['id']); ?>
                             </p>
 
@@ -304,7 +306,6 @@ if (!$user) {
                                         style="
                                         width: 120px;
                                         height: 120px;
-                                        object-fit: cover;
                                         border-radius: 50%;
                                     ">
 
