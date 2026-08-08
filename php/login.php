@@ -28,27 +28,25 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     if (empty($error['email']) && empty($error['password'])) {
-        // Xử lý đăng nhập
+        $password_hash = md5($password);
 
-        $password_hash = md5($password); // Mã hóa mật khẩu bằng MD5
+        $sql = "SELECT * FROM user WHERE email = ? AND password = ?";
 
-
-        $sql = "SELECT * FROM users WHERE email = ? AND password = ?";
-        //Chuẩn bị
         $stmt = $conn->prepare($sql);
-        //gán pasword, email vào tham số
+
+        if (!$stmt) {
+            die("Lỗi SQL: " . $conn->error);
+        }
+
         $stmt->bind_param("ss", $email, $password_hash);
-        // chạy lệnh
+
         $stmt->execute();
-        // Lấy kết quả
+
         $result = $stmt->get_result();
 
         if ($result->num_rows > 0) {
 
-            // Lấy thông tin người dùng từ database
             $user = $result->fetch_assoc();
-
-            // Lưu thông tin người dùng vào database 
 
             $_SESSION['user_id'] = $user['id'];
             $_SESSION['user_email'] = $user['email'];
@@ -57,9 +55,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
             $_SESSION['success_msg'] = "Đăng nhập thành công!";
 
-            header("Location: ../index.php");
+            header("Location: ../php/index.php");
             exit();
+
         } else {
+
             $error['password'] = "Email hoặc mật khẩu không đúng";
         }
     }
@@ -99,20 +99,24 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <body>
     <div class="login-form">
         <h2>Login to your account</h2>
-        <form action="#">
-            <input type="email" placeholder="Email Address" />
+        <form action="" method="POST">
+
+            <input type="email" name="email" placeholder="Email Address">
+
             <?php if (!empty($error['email'])): ?>
                 <span><?php echo $error['email']; ?></span>
             <?php endif; ?>
-            <input type="password" placeholder="Password" />
+
+            <input type="password" name="password" placeholder="Password">
+
             <?php if (!empty($error['password'])): ?>
                 <span><?php echo $error['password']; ?></span>
             <?php endif; ?>
-            <span>
-                <input type="checkbox" class="checkbox">
-                Keep me signed in
-            </span>
-            <button type="submit" class="btn btn-default">Login</button>
+
+            <button type="submit" class="btn btn-default">
+                Login
+            </button>
+
         </form>
     </div>
     </div>
