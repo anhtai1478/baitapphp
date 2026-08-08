@@ -275,12 +275,7 @@ if (!$user) {
 
                             <h2>Account Information</h2>
 
-                            <p>
-                                <strong>ID:</strong>
-
-                                <!-- htmlspecialchars: chuyển đổi các ký tự đặc biệt thành các entity HTML -->
-                                <?php echo htmlspecialchars($user['id']); ?>
-                            </p>
+                            
 
                             <p>
                                 <strong>Name:</strong>
