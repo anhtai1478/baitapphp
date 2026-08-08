@@ -59,7 +59,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // Yêu cầu: avatar lấy tên file insert vào
         $uploadDir = '../uploads/';
         $targetfilepath = $uploadDir . $fileName;
-        
+
         // Kiểm tra nếu thư mục uploads chưa tồn tại thì tạo mới
         if (!file_exists($uploadDir)) {
             mkdir($uploadDir, 0777, true);
@@ -75,7 +75,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 //$success_msg = "Đăng ký thành công!";
                 $email = $password = $name = "";
                 header("Location: login.php");
-                
+
             } else {
                 $error['email'] = "Email này đã tồn tại hoặc có lỗi CSDL!";
             }
@@ -92,10 +92,27 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
+    <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link rel="stylesheet" href="../css/register.css">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>Login | E-Shopper</title>
+    <link href="../css/bootstrap.min.css" rel="stylesheet">
+    <link href="../css/font-awesome.min.css" rel="stylesheet">
+    <link href="../css/prettyPhoto.css" rel="stylesheet">
+    <link href="../css/price-range.css" rel="stylesheet">
+    <link href="../css/animate.css" rel="stylesheet">
+    <link href="../css/main.css" rel="stylesheet">
+    <link href="../css/responsive.css" rel="stylesheet">
+    <!--[if lt IE 9]>
+    <script src="js/html5shiv.js"></script>
+    <script src="js/respond.min.js"></script>
+    <![endif]-->
+    <link rel="shortcut icon" href="../images/ico/favicon.ico">
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="../images/ico/apple-touch-icon-144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="../images/ico/apple-touch-icon-114-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="../images/ico/apple-touch-icon-72-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" href="../images/ico/apple-touch-icon-57-precomposed.png">
 </head>
 
 <body>
@@ -108,12 +125,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <?php endif; ?>
 
             <form action="" method="POST" enctype="multipart/form-data">
-                <input type="text" id="name" name="name" placeholder="Name" value="<?php echo htmlspecialchars($name); ?>" />
+                <input type="text" id="name" name="name" placeholder="Name"
+                    value="<?php echo htmlspecialchars($name); ?>" />
                 <?php if (!empty($error['name'])): ?>
                     <span><?php echo $error['name']; ?></span>
                 <?php endif; ?>
 
-                <input type="email" id="email" name="email" placeholder="Email Address" value="<?php echo htmlspecialchars($email); ?>" />
+                <input type="email" id="email" name="email" placeholder="Email Address"
+                    value="<?php echo htmlspecialchars($email); ?>" />
                 <?php if (!empty($error['email'])): ?>
                     <span><?php echo $error['email']; ?></span>
                 <?php endif; ?>
