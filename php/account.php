@@ -328,13 +328,11 @@ if (!$user) {
                             <form action="update_user.php" method="POST" enctype="multipart/form-data">
 
                                 <!-- Name -->
-                                <input type="text" name="name" placeholder="Name"
-                                    value="<?php echo htmlspecialchars($user['name'] ?? ''); ?>" />
+                                <input type="text" name="name" placeholder="Name" />
 
 
                                 <!-- Email -->
-                                <input type="email" name="email" placeholder="Email Address"
-                                    value="<?php echo htmlspecialchars($user['email'] ?? ''); ?>" />
+                                <input type="email" name="email" placeholder="Email Address"                                    />
 
 
                                 <!-- Password -->
