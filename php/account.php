@@ -241,7 +241,7 @@ if (!$user) {
                             <div class="panel panel-default">
                                 <div class="panel-heading">
                                     <h4 class="panel-title">
-                                        <a href="#">Account</a>
+                                        <a href="account.php">Account</a>
                                     </h4>
                                 </div>
                             </div>
@@ -249,7 +249,7 @@ if (!$user) {
                             <div class="panel panel-default">
                                 <div class="panel-heading">
                                     <h4 class="panel-title">
-                                        <a href="#">My product</a>
+                                        <a href="my-products.php">My product</a>
                                     </h4>
                                 </div>
                             </div>
