@@ -145,7 +145,7 @@ $result = $tmt->get_result();
                                             <!-- ACTION -->
                                             <td class="cart_total">
 
-                                                <a href="edit-product.php?id=<?= $product['id'] ?>">
+                                                <a href="edit-products.php?id=<?= $product['id'] ?>">
                                                     Edit
                                                 </a>
 
