@@ -89,7 +89,7 @@ if (!$result) {
 
                                 <?php if (isset($_SESSION['user_id'])): ?>
 
-                                    <!-- Khi đã đăng nhập -->
+                               
                                     <li>
                                         <a href="account.php">
                                             <i class="fa fa-user"></i>
@@ -113,7 +113,7 @@ if (!$result) {
 
                                 <?php else: ?>
 
-                                    <!-- Khi chưa đăng nhập -->
+                                 
                                     <li>
                                         <a href="login.php">
                                             <i class="fa fa-lock"></i>
