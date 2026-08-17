@@ -34,5 +34,4 @@ if($stmt ->execute()){
     echo"không xóa được sản phẩm" . $stmt -> error; 
 }
 
-
 ?>
