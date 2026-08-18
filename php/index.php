@@ -417,10 +417,10 @@ if (!$result) {
 
 
 
-                                                <a href="#" class="btn btn-default add-to-cart">
+                                                <a href="#" class="btn btn-default add-to-cart"
+                                                    onclick="Addtocart(<?= $product['id'] ?>); return false;">
 
                                                     <i class="fa fa-shopping-cart"></i>
-
                                                     Add to cart
 
                                                 </a>
@@ -618,6 +618,8 @@ if (!$result) {
     <script src="../js/price-range.js"></script>
     <script src="../js/jquery.prettyPhoto.js"></script>
     <script src="../js/main.js"></script>
+    <script src="../js/Addtocart.js"></script>
+    
 
 </body>
 
