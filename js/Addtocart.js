@@ -6,8 +6,4 @@ function Addtocart(id) {
         method: "POST",
         body: formData
     })
-    .then(response => response.json())
-    .then(data => {
-        console.log(data);
-    });
 }
