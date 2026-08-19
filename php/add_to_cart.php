@@ -4,13 +4,6 @@ include 'connect.php';
 
 header('Content-Type: application/json');
 
-if (!isset($_SESSION['user_id'])) {
-    echo json_encode([
-        'success' => false,
-        'message' => 'Bạn chưa đăng nhập'
-    ]);
-    exit();
-}
 
 if (!isset($_POST['id'])) {
     echo json_encode([
@@ -19,7 +12,7 @@ if (!isset($_POST['id'])) {
     ]);
     exit();
 }
-
+// chyển số nguyên
 $product_id = intval($_POST['id']);
 
 $sql = "SELECT * FROM product WHERE id = ?";
