@@ -3,29 +3,23 @@ session_start();
 include 'connect.php';
 
 if (!isset($_SESSION['user_id'])) {
-    header('Location: login.php');
+    header('location: login.php');
     exit();
 }
-// kiểm tra user có hay không 
-$id = $_SESSION['user_id'];
 
-$sql = "SELECT * FROM user WHERE id = ?";
-// Chuẩn bị câu lệnh SQL
-$stmt = $conn->prepare($sql);
+$cart = $_SESSION['cart'] ?? [];
 
-// chuẩn bị câu lệnh
-$stmt->bind_param("i", $id);
-$stmt->execute();
-// Lấy kết quả
-$result = $stmt->get_result();
 
-$user = $result->fetch_assoc();
-
-if (!$user) {
-    die("Không tìm thấy user có ID: " . $id);
+//count đếm số trong mảng
+if (count($cart) === 0) {
+    echo 'giỏ hàng trống';
 }
-?>
 
+
+
+
+
+?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -44,9 +38,9 @@ if (!$user) {
     <link href="../css/main.css" rel="stylesheet">
     <link href="../css/responsive.css" rel="stylesheet">
     <!--[if lt IE 9]>
-    <script src="js/html5shiv.js"></script>
-    <script src="js/respond.min.js"></script>
-    <![endif]-->
+        <script src="js/html5shiv.js"></script>
+        <script src="js/respond.min.js"></script>
+        <![endif]-->
     <link rel="shortcut icon" href="../images/ico/favicon.ico">
     <link rel="apple-touch-icon-precomposed" sizes="144x144" href="../images/ico/apple-touch-icon-144-precomposed.png">
     <link rel="apple-touch-icon-precomposed" sizes="114x114" href="../images/ico/apple-touch-icon-114-precomposed.png">
@@ -138,7 +132,7 @@ if (!$user) {
                                 </li>
 
                                 <li>
-                                    <a href="cart.html">
+                                    <a href="cart.php">
                                         <i class="fa fa-shopping-cart"></i> Cart
                                     </a>
                                 </li>
@@ -223,133 +217,175 @@ if (!$user) {
             </div>
         </div><!--/header-bottom-->
     </header>
-    <section>
+
+    <section id="cart_items">
         <div class="container">
-            <div class="row">
+            <div class="breadcrumbs">
+                <ol class="breadcrumb">
+                    <li><a href="#">Home</a></li>
+                    <li class="active">Shopping Cart</li>
+                </ol>
+            </div>
+            <div class="table-responsive cart_info">
+                <table class="table table-condensed">
+                    <thead>
+                        <tr class="cart_menu">
+                            <td class="image">Item</td>
+                            <td class="description"></td>
+                            <td class="price">Price</td>
+                            <td class="quantity">Quantity</td>
+                            <td class="total">Total</td>
+                            <td></td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($cart as $product_id => $qty): ?>
 
-                <!-- Sidebar -->
-                <div class="col-sm-3">
-                    <div class="left-sidebar">
+                            <?php
+                            $sql = "SELECT * FROM product WHERE id = ?";
+                            $stmt = $conn->prepare($sql);
 
-                        <h2>Account</h2>
+                            $stmt->bind_param("i", $product_id);
+                            $stmt->execute();
 
-                        <div class="panel-group category-products" id="accordian">
+                            $result = $stmt->get_result();
+                            $product = $result->fetch_assoc();
 
-                            <div class="panel panel-default">
-                                <div class="panel-heading">
-                                    <h4 class="panel-title">
-                                        <a href="account.php">Account</a>
+                            $total = $product['price'] * $qty;
+                            ?>
+
+                            <tr>
+                                <td class="cart_product">
+                                    <a href="">
+                                        <img src="<?= $product['image'] ?>" alt="">
+                                    </a>
+                                </td>
+
+                                <td class="cart_description">
+                                    <h4>
+                                        <a href="">
+                                            <?= $product['title'] ?>
+                                        </a>
                                     </h4>
-                                </div>
-                            </div>
 
-                            <div class="panel panel-default">
-                                <div class="panel-heading">
-                                    <h4 class="panel-title">
-                                        <a href="my-products.php">My product</a>
-                                    </h4>
-                                </div>
-                            </div>
+                                    <p>Web ID: <?= $product['id'] ?></p>
+                                </td>
 
-                        </div>
+                                <td class="cart_price">
+                                    <p><?= number_format($product['price']) ?> đ</p>
+                                </td>
 
-                    </div>
-                </div>
+                                <td class="cart_quantity">
+                                    <div class="cart_quantity_button">
 
+                                        <a class="cart_quantity_up" href=""> + </a>
 
-                <!-- Account -->
-                <div class="col-sm-9">
+                                        <input class="cart_quantity_input" type="text" name="quantity" value="<?= $qty ?>"
+                                            autocomplete="off" size="2">
 
-                    <div class="blog-post-area">
+                                        <a class="cart_quantity_down" href=""> - </a>
 
-                        <h2 class="title text-center">
-                            Account Information
-                        </h2>
+                                    </div>
+                                </td>
 
-
-                        <!-- Thông tin Account -->
-                        <div class="signup-form">
-
-                            <h2>Account Information</h2>
-
-                            
-
-                            <p>
-                                <strong>Name:</strong>
-                                <?php echo htmlspecialchars($user['name']); ?>
-                            </p>
-
-                            <p>
-                                <strong>Email:</strong>
-                                <?php echo htmlspecialchars($user['email']); ?>
-                            </p>
-
-
-                            <!-- Avatar -->
-                            <?php if (!empty($user['avatar'])): ?>
-
-                                <div style="margin: 20px 0;">
-
-                                    <p>
-                                        <strong>Avatar:</strong>
+                                <td class="cart_total">
+                                    <p class="cart_total_price">
+                                        <?= number_format($total) ?> đ
                                     </p>
+                                </td>
 
-                                    <img src="../uploads/<?php echo htmlspecialchars($user['avatar']); ?>" alt="Avatar"
-                                        style="
-                                        width: 120px;
-                                        height: 120px;
-                                        border-radius: 50%;
-                                    ">
+                                <td class="cart_delete">
+                                    <a class="cart_quantity_delete" href="">
+                                        <i class="fa fa-times"></i>
+                                    </a>
+                                </td>
+                            </tr>
 
-                                </div>
-
-                            <?php endif; ?>
-
-                        </div>
-
-
-                        <!-- Update User -->
-                        <h2 class="title text-center">
-                            Update User
-                        </h2>
-
-                        <div class="signup-form">
-
-                            <h2>Update Information</h2>
-
-                            <form action="update_user.php" method="POST" enctype="multipart/form-data">
-
-                                <!-- Name -->
-                                <input type="text" name="name" placeholder="Name" />
-
-
-                                <!-- Email -->
-                                <input type="email" name="email" placeholder="Email Address"                                    />
-
-
-                                <!-- Password -->
-                                <input type="password" name="password" placeholder="Password" />
-
-
-                                <!-- Avatar -->
-                                <input type="file" name="avatar" accept="image/*" />
-
-
-                                <button type="submit" class="btn btn-default">
-                                    Update
-                                </button>
-
-                            </form>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
             </div>
         </div>
-    </section>
+    </section> <!--/#cart_items-->
+
+    <section id="do_action">
+        <div class="container">
+            <div class="heading">
+                <h3>What would you like to do next?</h3>
+                <p>Choose if you have a discount code or reward points you want to use or would like to estimate your
+                    delivery cost.</p>
+            </div>
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="chose_area">
+                        <ul class="user_option">
+                            <li>
+                                <input type="checkbox">
+                                <label>Use Coupon Code</label>
+                            </li>
+                            <li>
+                                <input type="checkbox">
+                                <label>Use Gift Voucher</label>
+                            </li>
+                            <li>
+                                <input type="checkbox">
+                                <label>Estimate Shipping & Taxes</label>
+                            </li>
+                        </ul>
+                        <ul class="user_info">
+                            <li class="single_field">
+                                <label>Country:</label>
+                                <select>
+                                    <option>United States</option>
+                                    <option>Bangladesh</option>
+                                    <option>UK</option>
+                                    <option>India</option>
+                                    <option>Pakistan</option>
+                                    <option>Ucrane</option>
+                                    <option>Canada</option>
+                                    <option>Dubai</option>
+                                </select>
+
+                            </li>
+                            <li class="single_field">
+                                <label>Region / State:</label>
+                                <select>
+                                    <option>Select</option>
+                                    <option>Dhaka</option>
+                                    <option>London</option>
+                                    <option>Dillih</option>
+                                    <option>Lahore</option>
+                                    <option>Alaska</option>
+                                    <option>Canada</option>
+                                    <option>Dubai</option>
+                                </select>
+
+                            </li>
+                            <li class="single_field zip-field">
+                                <label>Zip Code:</label>
+                                <input type="text">
+                            </li>
+                        </ul>
+                        <a class="btn btn-default update" href="">Get Quotes</a>
+                        <a class="btn btn-default check_out" href="">Continue</a>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="total_area">
+                        <ul>
+                            <li>Cart Sub Total <span>$59</span></li>
+                            <li>Eco Tax <span>$2</span></li>
+                            <li>Shipping Cost <span>Free</span></li>
+                            <li>Total <span>$61</span></li>
+                        </ul>
+                        <a class="btn btn-default update" href="">Update</a>
+                        <a class="btn btn-default check_out" href="">Check Out</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section><!--/#do_action-->
+
     <footer id="footer"><!--Footer-->
         <div class="footer-top">
             <div class="container">
@@ -438,11 +474,11 @@ if (!$user) {
                         <div class="single-widget">
                             <h2>Service</h2>
                             <ul class="nav nav-pills nav-stacked">
-                                <li><a href="#">Online Help</a></li>
-                                <li><a href="#">Contact Us</a></li>
-                                <li><a href="#">Order Status</a></li>
-                                <li><a href="#">Change Location</a></li>
-                                <li><a href="#">FAQ’s</a></li>
+                                <li><a href="">Online Help</a></li>
+                                <li><a href="">Contact Us</a></li>
+                                <li><a href="">Order Status</a></li>
+                                <li><a href="">Change Location</a></li>
+                                <li><a href="">FAQ’s</a></li>
                             </ul>
                         </div>
                     </div>
@@ -450,11 +486,11 @@ if (!$user) {
                         <div class="single-widget">
                             <h2>Quock Shop</h2>
                             <ul class="nav nav-pills nav-stacked">
-                                <li><a href="#">T-Shirt</a></li>
-                                <li><a href="#">Mens</a></li>
-                                <li><a href="#">Womens</a></li>
-                                <li><a href="#">Gift Cards</a></li>
-                                <li><a href="#">Shoes</a></li>
+                                <li><a href="">T-Shirt</a></li>
+                                <li><a href="">Mens</a></li>
+                                <li><a href="">Womens</a></li>
+                                <li><a href="">Gift Cards</a></li>
+                                <li><a href="">Shoes</a></li>
                             </ul>
                         </div>
                     </div>
@@ -462,11 +498,11 @@ if (!$user) {
                         <div class="single-widget">
                             <h2>Policies</h2>
                             <ul class="nav nav-pills nav-stacked">
-                                <li><a href="#">Terms of Use</a></li>
-                                <li><a href="#">Privecy Policy</a></li>
-                                <li><a href="#">Refund Policy</a></li>
-                                <li><a href="#">Billing System</a></li>
-                                <li><a href="#">Ticket System</a></li>
+                                <li><a href="">Terms of Use</a></li>
+                                <li><a href="">Privecy Policy</a></li>
+                                <li><a href="">Refund Policy</a></li>
+                                <li><a href="">Billing System</a></li>
+                                <li><a href="">Ticket System</a></li>
                             </ul>
                         </div>
                     </div>
@@ -474,11 +510,11 @@ if (!$user) {
                         <div class="single-widget">
                             <h2>About Shopper</h2>
                             <ul class="nav nav-pills nav-stacked">
-                                <li><a href="#">Company Information</a></li>
-                                <li><a href="#">Careers</a></li>
-                                <li><a href="#">Store Location</a></li>
-                                <li><a href="#">Affillate Program</a></li>
-                                <li><a href="#">Copyright</a></li>
+                                <li><a href="">Company Information</a></li>
+                                <li><a href="">Careers</a></li>
+                                <li><a href="">Store Location</a></li>
+                                <li><a href="">Affillate Program</a></li>
+                                <li><a href="">Copyright</a></li>
                             </ul>
                         </div>
                     </div>
@@ -508,8 +544,7 @@ if (!$user) {
             </div>
         </div>
 
-    </footer>
-
+    </footer><!--/Footer-->
 </body>
 
 </html>

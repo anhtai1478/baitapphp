@@ -47,7 +47,6 @@ if (isset($_SESSION['cart'][$product_id])) {
 echo json_encode([
     'số lượng' => $_SESSION['cart'][$product_id],
     'số id' => $product_id,
-   
     'success' => true
 ]);
 ?>
