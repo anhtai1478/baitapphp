@@ -48,7 +48,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 });
 
-// Hàm gửi API Fetch (Có từ khóa async chuẩn)
+
 async function updateCart(id, qty) {
     try {
         const response = await fetch('up_down.php', {
