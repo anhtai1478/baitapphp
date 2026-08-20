@@ -618,6 +618,7 @@ if (!$result) {
     <script src="../js/jquery.prettyPhoto.js"></script>
     <script src="../js/main.js"></script>
     <script src="../js/Addtocart.js"></script>
+    <script src="../js/Cart.js"></script>
 
 
 </body>
