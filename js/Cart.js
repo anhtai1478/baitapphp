@@ -69,7 +69,7 @@ document.querySelectorAll('.cart_quantity_delete')
             e.preventDefault();
 
             const tr = this.closest('tr');
-
+            
             const id = tr.dataset.id;
 
             deleteCart(id, tr);

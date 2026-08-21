@@ -4,7 +4,8 @@ session_start();
 
 header('Content-Type: application/json');
 
-
+// json_decode: chuyển dữ liệu thành php
+// file_get_contents("php://input"): đọc dữ liệu từ js gửi về 
 $data = json_decode(file_get_contents("php://input"), true);
 
 
