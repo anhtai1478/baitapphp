@@ -10,7 +10,7 @@ if (!isset($_SESSION['user_id'])) {
 $cart = $_SESSION['cart'] ?? [];
 $products_in_cart = [];
 $grand_total = 0;
-$cart_count =array_sum($cart);
+$cart_count = array_sum($cart);
 
 if (!empty($cart)) {
     $product_ids = array_keys($cart);
@@ -368,7 +368,8 @@ if (!empty($cart)) {
                                 $grand_total += $total;
                                 ?>
 
-                                <tr id="product-row-<?= $product['id'] ?>" data-id="<?= $product['id'] ?>">
+                                <tr id="product-row-<?= $product['id'] ?>" data-id="<?= $product['id'] ?>"
+                                    data-price="<?= $product['price'] ?>">  
 
                                     <td class="cart_product">
 
