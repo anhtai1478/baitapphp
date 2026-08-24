@@ -138,7 +138,7 @@ $result = $tmt->get_result();
                                 </li>
 
                                 <li>
-                                    <a href="cart.html">
+                                    <a href="cart.php">
                                         <i class="fa fa-shopping-cart"></i> Cart
                                     </a>
                                 </li>

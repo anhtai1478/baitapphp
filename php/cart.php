@@ -10,6 +10,7 @@ if (!isset($_SESSION['user_id'])) {
 $cart = $_SESSION['cart'] ?? [];
 $products_in_cart = [];
 $grand_total = 0;
+$cart_count =array_sum($cart);
 
 if (!empty($cart)) {
     $product_ids = array_keys($cart);
@@ -154,10 +155,12 @@ if (!empty($cart)) {
                                 </li>
 
 
-                                <li>
-                                    <a href="cart.php">
-                                        <i class="fa fa-shopping-cart"></i>
+                                <li><a href="cart.php">
+                                        <i class="fa fa-shopping-cart">
+
+                                        </i>
                                         Cart
+                                        <span id="cart_count"><?= $cart_count ?></span>
                                     </a>
                                 </li>
 
@@ -402,7 +405,11 @@ if (!empty($cart)) {
                                         <p class="product_price">
 
                                             <?= number_format(
-                                                $product['price'], 0,',', '.') ?>
+                                                $product['price'],
+                                                0,
+                                                ',',
+                                                '.'
+                                            ) ?>
                                             đ
                                         </p>
 
@@ -443,7 +450,7 @@ if (!empty($cart)) {
 
                                         <p class="cart_total_price">
 
-                                            <?= number_format($total,0,',','.') ?>
+                                            <?= number_format($total, 0, ',', '.') ?>
 
                                             đ
 

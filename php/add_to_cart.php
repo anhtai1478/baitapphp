@@ -1,4 +1,4 @@
-<?php 
+<?php
 session_start();
 include 'connect.php';
 
@@ -44,7 +44,10 @@ if (isset($_SESSION['cart'][$product_id])) {
     $_SESSION['cart'][$product_id] = 1;
 }
 
+$cart_count = array_sum($_SESSION['cart']);
 echo json_encode([
+    
+    'cart_count' => $cart_count,
     'số lượng' => $_SESSION['cart'][$product_id],
     'số id' => $product_id,
     'success' => true
