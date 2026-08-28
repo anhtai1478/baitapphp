@@ -58,81 +58,68 @@ document.querySelectorAll('.cart_quantity_delete')
     });
 
 async function Cart(id, qty, tr, oldQty) {
+    try {
+        const response = await fetch('up_down.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ id: id, qty: qty })
+        });
+        const data = await response.json();
 
-    const response = await fetch('up_down.php', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            id: id,
-            qty: qty
-        })
-    });
+        if (!data.success) {
+            throw new Error(data.message);
+        }
 
-    const data = await response.json();
-
-    console.log(data);
-    // if (data.success) {
-    //     location.reload();
-    // }
-
-    if (data.success) {
-
-        
-        const price = parseInt(tr.dataset.price);
-
-        
+        const price = Number(tr.dataset.price);
         const oldTotal = price * oldQty;
-
-        
         const newTotal = price * qty;
-
-      
         const changeTotal = newTotal - oldTotal;
 
-        const subTotal = document.querySelector('#cart_sub_total');
-
-        const total = document.querySelector('#cart_total');
-
-        let currentTotal = parseInt(
-            subTotal.textContent.replace(/\D/g, '')
-        );
-
-        currentTotal += changeTotal;
-
-        subTotal.textContent =
-            currentTotal.toLocaleString('vi-VN') + ' đ';
-
-        total.textContent =
-            currentTotal.toLocaleString('vi-VN') + ' đ';
+        tr.querySelector('.cart_total_price').textContent =
+            newTotal.toLocaleString('vi-VN') + ' đ';
+        updateCartSummary(changeTotal, qty - oldQty);
+    } catch (error) {
+        tr.querySelector('.cart_quantity_input').value = oldQty;
+        alert(error.message || 'Không thể cập nhật số lượng');
     }
 }
 
 async function deleteCart(id, tr) {
+    try {
+        const response = await fetch('up_down.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ id: id, action: 'delete' })
+        });
+        const data = await response.json();
 
-    const response = await fetch('delete.php', {
+        if (!data.success) {
+            throw new Error(data.message);
+        }
 
-        method: 'POST',
+        const qty = Number(tr.querySelector('.cart_quantity_input').value);
+        const price = Number(tr.dataset.price);
 
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            id: id
-        })
-
-    });
-
-    const data = await response.json();
-
-    console.log(data);
-
-    if (data.success) {
         tr.remove();
-
-    } else {
-        alert(data.message)
+        updateCartSummary(-(price * qty), -qty);
+    } catch (error) {
+        alert(error.message || 'Không thể xóa sản phẩm');
     }
+}
 
+function updateCartSummary(changeTotal, changeCount) {
+    const subTotal = document.querySelector('#cart_sub_total');
+    const grandTotal = document.querySelector('#cart_grand_total');
+    const cartCount = document.querySelector('#cart_count');
+    const currentTotal = Number(subTotal.textContent.replace(/\D/g, '')) + changeTotal;
+    const currentCount = Number(cartCount.textContent) + changeCount;
+    const formattedTotal = currentTotal.toLocaleString('vi-VN') + ' đ';
+
+    subTotal.textContent = formattedTotal;
+    grandTotal.textContent = formattedTotal;
+    cartCount.textContent = Math.max(0, currentCount);
 }
