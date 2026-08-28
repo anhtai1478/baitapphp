@@ -84,6 +84,7 @@ async function Cart(id, qty, tr, oldQty) {
 
     if (data.success) {
 
+        const cartCount = document.querySelector('#cart_count');
 
         const price = parseInt(tr.dataset.price);
 
@@ -108,10 +109,9 @@ async function Cart(id, qty, tr, oldQty) {
         currentTotal += changeTotal;
 
         subTotal.textContent = currentTotal.toLocaleString('vi-VN') + ' đ';
-
+        
+        
         total.textContent = currentTotal.toLocaleString('vi-VN') + ' đ';
-
-        const cartCount = document.querySelector('#cart_count');
         
         cartCount.textContent = Number(cartCount.textContent) + (qty - oldQty);
     }
