@@ -81,9 +81,6 @@ async function Cart(id, qty, tr, oldQty) {
     }
 
     console.log(data);
-    // if (data.success) {
-    //     location.reload();
-    // }
 
     if (data.success) {
 
@@ -98,7 +95,7 @@ async function Cart(id, qty, tr, oldQty) {
 
         // cập nhật total của sản phẩm 
         const productTotal = tr.querySelector('.cart_total_price');
-        // productTotal.textContent = newTotal.toLocaleString('vi-VN') + ' đ';
+        productTotal.textContent = newTotal.toLocaleString('vi-VN') + ' đ';
 
         const changeTotal = newTotal - oldTotal;
 
@@ -115,6 +112,7 @@ async function Cart(id, qty, tr, oldQty) {
         total.textContent = currentTotal.toLocaleString('vi-VN') + ' đ';
 
         const cartCount = document.querySelector('#cart_count');
+        
         cartCount.textContent = Number(cartCount.textContent) + (qty - oldQty);
     }
 }
@@ -140,9 +138,7 @@ async function deleteCart(id, tr) {
     console.log(data);
 
     if (data.success) {
-        const quantity = Number(
-            tr.querySelector('.cart_quantity_input').value
-        );
+        const quantity = Number(tr.querySelector('.cart_quantity_input').value);
 
         const price = Number(tr.dataset.price);
         const productTotal = price * quantity;
@@ -150,10 +146,10 @@ async function deleteCart(id, tr) {
         const subTotal = document.querySelector('#cart_sub_total');
         const grandTotal = document.querySelector('#cart_grand_total');
         const cartCount = document.querySelector('#cart_count');
-
-         const currentTotal = Number(subTotal.textContent.replace(/\D/g, ''));
+        // chuyển tổng tiền thành số
+        const currentTotal = Number(subTotal.textContent.replace(/\D/g, ''));
         const newTotal = currentTotal - productTotal;
-
+        // cập nhật tổng số tiền tạm tính total
         subTotal.textContent = newTotal.toLocaleString('vi-VN') + ' đ';
 
         grandTotal.textContent = newTotal.toLocaleString('vi-VN') + ' đ';

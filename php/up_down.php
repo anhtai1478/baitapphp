@@ -33,7 +33,7 @@ if (!isset($data['qty'])) {
     ]);
     exit();
 }
-
+//intval: chuyển giá trị thành số 
 $qty = intval($data['qty']);
 
 if ($qty < 1) {
