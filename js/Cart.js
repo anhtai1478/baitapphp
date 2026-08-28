@@ -58,68 +58,109 @@ document.querySelectorAll('.cart_quantity_delete')
     });
 
 async function Cart(id, qty, tr, oldQty) {
-    try {
-        const response = await fetch('up_down.php', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ id: id, qty: qty })
-        });
-        const data = await response.json();
 
-        if (!data.success) {
-            throw new Error(data.message);
-        }
+    const qtyInput = tr.querySelector('.cart_quantity_input');
 
-        const price = Number(tr.dataset.price);
+    const response = await fetch('up_down.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            id: id,
+            qty: qty
+        })
+    });
+
+    const data = await response.json();
+
+    if (!data.success) {
+        qtyInput.value = oldQty;
+        alert(data.message);
+        return;
+    }
+
+    console.log(data);
+    // if (data.success) {
+    //     location.reload();
+    // }
+
+    if (data.success) {
+
+
+        const price = parseInt(tr.dataset.price);
+
+
         const oldTotal = price * oldQty;
+
+
         const newTotal = price * qty;
+
+        // cập nhật total của sản phẩm 
+        const productTotal = tr.querySelector('.cart_total_price');
+        // productTotal.textContent = newTotal.toLocaleString('vi-VN') + ' đ';
+
         const changeTotal = newTotal - oldTotal;
 
-        tr.querySelector('.cart_total_price').textContent =
-            newTotal.toLocaleString('vi-VN') + ' đ';
-        updateCartSummary(changeTotal, qty - oldQty);
-    } catch (error) {
-        tr.querySelector('.cart_quantity_input').value = oldQty;
-        alert(error.message || 'Không thể cập nhật số lượng');
+        const subTotal = document.querySelector('#cart_sub_total');
+
+        const total = document.querySelector('#cart_grand_total');
+
+        let currentTotal = parseInt(subTotal.textContent.replace(/\D/g, ''));
+
+        currentTotal += changeTotal;
+
+        subTotal.textContent = currentTotal.toLocaleString('vi-VN') + ' đ';
+
+        total.textContent = currentTotal.toLocaleString('vi-VN') + ' đ';
+
+        const cartCount = document.querySelector('#cart_count');
+        cartCount.textContent = Number(cartCount.textContent) + (qty - oldQty);
     }
 }
 
 async function deleteCart(id, tr) {
-    try {
-        const response = await fetch('up_down.php', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ id: id, action: 'delete' })
-        });
-        const data = await response.json();
 
-        if (!data.success) {
-            throw new Error(data.message);
-        }
+    const response = await fetch('up_down.php', {
 
-        const qty = Number(tr.querySelector('.cart_quantity_input').value);
+        method: 'POST',
+
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            id: id,
+            action: 'delete'
+        })
+
+    });
+
+    const data = await response.json();
+
+    console.log(data);
+
+    if (data.success) {
+        const quantity = Number(
+            tr.querySelector('.cart_quantity_input').value
+        );
+
         const price = Number(tr.dataset.price);
+        const productTotal = price * quantity;
+
+        const subTotal = document.querySelector('#cart_sub_total');
+        const grandTotal = document.querySelector('#cart_grand_total');
+        const cartCount = document.querySelector('#cart_count');
+
+         const currentTotal = Number(subTotal.textContent.replace(/\D/g, ''));
+        const newTotal = currentTotal - productTotal;
+
+        subTotal.textContent = newTotal.toLocaleString('vi-VN') + ' đ';
+
+        grandTotal.textContent = newTotal.toLocaleString('vi-VN') + ' đ';
+
+        cartCount.textContent = Number(cartCount.textContent) - quantity;
 
         tr.remove();
-        updateCartSummary(-(price * qty), -qty);
-    } catch (error) {
-        alert(error.message || 'Không thể xóa sản phẩm');
     }
-}
 
-function updateCartSummary(changeTotal, changeCount) {
-    const subTotal = document.querySelector('#cart_sub_total');
-    const grandTotal = document.querySelector('#cart_grand_total');
-    const cartCount = document.querySelector('#cart_count');
-    const currentTotal = Number(subTotal.textContent.replace(/\D/g, '')) + changeTotal;
-    const currentCount = Number(cartCount.textContent) + changeCount;
-    const formattedTotal = currentTotal.toLocaleString('vi-VN') + ' đ';
-
-    subTotal.textContent = formattedTotal;
-    grandTotal.textContent = formattedTotal;
-    cartCount.textContent = Math.max(0, currentCount);
 }
